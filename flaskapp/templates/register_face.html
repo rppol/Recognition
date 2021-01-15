@@ -1,0 +1,70 @@
+{% extends "layout.html" %} {% block head %}
+<!-- Our Custom CSS -->
+<!-- <link
+  rel="stylesheet"
+  href="{{ url_for('static', filename='css/home.css') }}"
+/> -->
+<link
+  rel="stylesheet"
+  href="{{ url_for('static', filename='css/style.css') }}"
+/>
+<link
+  rel="stylesheet"
+  href="{{ url_for('static', filename='css/main.css') }}"
+/>
+{% endblock %} {% block content %}
+
+<form
+  method="POST"
+  action=""
+  id="registerationForm"
+  class="p-2 pt-md-0 mt-1 pt-sm-3 mt-md-2 mt-lg-0"
+  enctype="multipart/form-data"
+>
+  {{ form.hidden_tag() }}
+  <div class="container col-md-12 col-lg-11">
+    <div class="row">
+      <h3 class="p-1">Register Face</h3>
+      <div class="col-12">
+        <div class="file-field float-right">
+          <a class="btn-floating bg-dark mt-0 float-left">
+            <i class="fas fa-camera" aria-hidden="true"></i>
+            {{ form.images(multiple="multiple",
+            accept="image/png,image/jpg,image/jpeg") }}
+          </a>
+        </div>
+        {% if form.images.errors %} {% for error in form.images.errors %}
+        <small><span class="text-danger">{{ error }}</span></small>
+        {% endfor %} {% endif %}
+        <div class="photoFrame shadow-lg p-3 bg-white rounded text-center">
+          <div id="imageSelectShow" class="imageContainer">
+            <!-- <img id="uploadedImage" class="img-rounded" src="file_path" alt="file_name"> -->
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="line"></div>
+
+    <div class="form-row">
+      <div class="form-group col-md-6">
+        {{ form.name.label(class="col-form-label col-form-label-lg") }} {% if
+        form.name.errors %} {{ form.name(class="form-control form-control-lg
+        is-invalid") }}
+        <div class="invalid-feedback">
+          {% for error in form.name.errors %}
+          <span>{{ error }}</span>
+          {% endfor %}
+        </div>
+        {% else %} {{ form.name(class="form-control form-control-lg") }} {%
+        endif %}
+      </div>
+      <div class="form-group col-12 col-md-4 col-lg-3 mt-3 mt-md-5 text-right">
+        {{ form.submit(class="btn btn-block btn-lg purple-gradient text-white
+        font-weight-bold") }}
+      </div>
+    </div>
+  </div>
+</form>
+
+{% endblock %}

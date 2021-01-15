@@ -1,0 +1,282 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1, shrink-to-fit=no"
+    />
+
+    <!-- Bootstrap CSS -->
+    <link
+      rel="stylesheet"
+      href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"
+      integrity="sha384-JcKb8q3iqJ61gNV9KGb8thSsNjpSL0n8PARn9HuZOnIxN0hoP+VmmDGMN5t9UJ0Z"
+      crossorigin="anonymous"
+    />
+    {% block head %} {% endblock %}
+
+    <!-- Font Awesome -->
+    <script type="text/javascript">
+      // Notice how this gets configured before we load Font Awesome
+      window.FontAwesomeConfig = { autoReplaceSvg: false };
+    </script>
+    <link
+      rel="stylesheet"
+      href="https://use.fontawesome.com/releases/v5.8.1/css/all.css"
+      integrity="sha384-50oBUHEmvpQ+1lW4y57PTFmhCaXp0ML5d60M1M7uH2+nqUivzIebhndOJK28anvf"
+      crossorigin="anonymous"
+    />
+
+    <!-- Font Awesome JS -->
+    <script
+      defer
+      src="https://use.fontawesome.com/releases/v5.0.13/js/solid.js"
+      integrity="sha384-tzzSw1/Vo+0N5UhStP3bvwWPq+uvzCMfrN1fEFe+xBmv1C/AtVX5K0uZtmcHitFZ"
+      crossorigin="anonymous"
+    ></script>
+    <script
+      defer
+      src="https://use.fontawesome.com/releases/v5.0.13/js/fontawesome.js"
+      integrity="sha384-6OIrr52G08NpOFSZdxxz1xdNSndlD4vdcf/q2myIUVO0VsqaGHJsB0RaBE01VTOY"
+      crossorigin="anonymous"
+    ></script>
+
+    {% if title %}
+    <title>Face Detection - {{title}}</title>
+    {% else %}
+    <title>Face Detection</title>
+    {% endif %}
+  </head>
+
+  <body>
+    <header class="site-header">
+      <nav class="navbar navbar-expand-md navbar-dark bg-steel fixed-top">
+        <div class="container">
+          <a class="navbar-brand mr-4" href="{{ url_for('home') }}"
+            >Face Detection</a
+          >
+          <button
+            class="navbar-toggler"
+            type="button"
+            data-toggle="collapse"
+            data-target="#navbarToggle"
+            aria-controls="navbarToggle"
+            aria-expanded="false"
+            aria-label="Toggle navigation"
+          >
+            Face Detection
+            <span class="navbar-toggler-icon"></span>
+          </button>
+          <div class="collapse navbar-collapse" id="navbarToggle">
+            <div class="navbar-nav mr-auto">
+              <a class="nav-item nav-link" href="{{ url_for('home') }}">Home</a>
+              <a class="nav-item nav-link" href="{{ url_for('register_face') }}"
+                >Register Face</a
+              >
+              <a class="nav-item nav-link" href="{{ url_for('all_faces') }}"
+                >All Faces</a
+              >
+              <!-- <a class="nav-item nav-link" href="{{ url_for('about') }}"
+                >About</a
+              > -->
+            </div>
+            <!-- Navbar Right Side -->
+            <div class="navbar-nav">
+              {% if current_user.is_authenticated %}
+              <a class="nav-item nav-link" href="{{ url_for('account') }}"
+                >Account</a
+              >
+              <a class="nav-item nav-link" href="{{ url_for('logout') }}"
+                >Logout</a
+              >
+              {% else %}
+              <a class="nav-item nav-link" href="{{ url_for('login') }}"
+                >Login</a
+              >
+              <a class="nav-item nav-link" href="{{ url_for('register') }}"
+                >Register</a
+              >
+              {% endif %}
+            </div>
+          </div>
+        </div>
+      </nav>
+    </header>
+
+    <main role="main" class="container">
+      <div class="row">
+        <div class="col-md-8">{% block content %}{% endblock %}</div>
+      </div>
+    </main>
+
+    <!-- Image Show Modal -->
+    <div
+      id="imageModal"
+      class="modal fade p-0"
+      tabindex="-1"
+      role="dialog"
+      aria-labelledby="myModalLabel"
+      aria-hidden="true"
+    >
+      <div class="modal-dialog d-flex" style="height: 90%">
+        <div class="modal-content align-self-center">
+          <div class="modal-body">
+            <button type="button" class="close" data-dismiss="modal">
+              <span aria-hidden="true">&times;</span
+              ><span class="sr-only">Close</span>
+            </button>
+            <img src="" class="imagePreview" />
+          </div>
+          {% if enableDeletePersonPhoto == True: %}
+          <div class="modal-footer">
+            <a class="deleteImageButton btn btn-danger btn-sm m-1" href="#"
+              >Delete Image</a
+            >
+          </div>
+          {% endif %}
+        </div>
+      </div>
+    </div>
+
+    {% if person: %}
+    <!-- Delete Modal -->
+    <div
+      class="modal fade"
+      id="deletePersonModal"
+      tabindex="-1"
+      role="dialog"
+      aria-labelledby="deletePersonModalCenterTitle"
+      aria-hidden="true"
+    >
+      <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="deletePersonModalLongTitle"></h5>
+            <button
+              type="button"
+              class="close"
+              data-dismiss="modal"
+              aria-label="Close"
+            >
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="modal-body mt-1 mb-4"></div>
+          <div class="modal-footer">
+            <button
+              type="button"
+              class="btn btn-secondary"
+              data-dismiss="modal"
+            >
+              Close
+            </button>
+            <form
+              action="{{ url_for('delete_person', person_id=person.id) }}"
+              method="POST"
+            >
+              <input
+                class="btn btn-danger"
+                type="submit"
+                value="Delete Person"
+              />
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+    {% endif %}
+
+    <!-- Optional JavaScript -->
+    <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+    <script
+      type="text/javascript"
+      src="{{ url_for('static', filename='js/app.js') }}"
+    ></script>
+    <script
+      src="https://code.jquery.com/jquery-3.5.1.slim.min.js"
+      integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj"
+      crossorigin="anonymous"
+    ></script>
+    <script
+      src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js"
+      integrity="sha384-9/reFTGAW83EW2RDu2S0VKaIzap3H66lZH81PoYlFhbGU+6BZp6G7niu735Sk7lN"
+      crossorigin="anonymous"
+    ></script>
+    <script
+      src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"
+      integrity="sha384-B4gt1jrGC7Jh4AgTPSdUtOBvfO8shuf57BaghqFfPlYxofvL8/KUEfYiJOMMV+rV"
+      crossorigin="anonymous"
+    ></script>
+    <script type="text/javascript">
+      var imagesToBeDeleted = "";
+      $(document).ready(function () {
+          $('#sidebarCollapse').on('click', function () {
+              $('#sidebar').toggleClass('active');
+              $(this).toggleClass('active');
+          });
+
+          {% if selectedListElement: %}
+              $('#{{ selectedListElement }}').attr("class", "active");
+          {% endif %}
+
+          $('#imageModal').on('show.bs.modal', function (e) {
+              var src = $(e.relatedTarget).attr('src');
+              $(this).find('.modal-body > img.imagePreview').attr('src', src);
+              imagesToBeDeleted = "";
+              {% if enableDeletePersonPhoto == True: %}
+                  $(this).find('.modal-footer > a.deleteImageButton').click(function() {
+                      image_id = $(e.relatedTarget)[0].parentNode.id;
+                      console.log(image_id);
+                      if (imagesToBeDeleted == "")
+                          imagesToBeDeleted += image_id;
+                      else
+                          imagesToBeDeleted += ';' + image_id;
+                      $('#images_to_be_deleted').attr('value', imagesToBeDeleted);
+                      $('#imageModal').modal('toggle');
+                      $('#' + image_id).remove();
+                  });
+              {% endif %}
+          });
+
+          {% if person: %}
+              $('#deletePersonModal').on('show.bs.modal', function (e) {
+                  $(this).find('#deletePersonModalLongTitle')[0].innerHTML = "Delete person - {{ person.name }}?";
+                  $(this).find('.modal-body')[0].innerHTML = "This will delete all the images and record of {{ person.name }}.";
+              });
+          {% endif %}
+      });
+
+      {% if selectedListElement == 'detectFaces' or selectedListElement == 'registerFace' or selectedListElement == 'recognizeFace' or file_select == True: %}
+          window.onload = function() {
+              //Check File API support
+              if (window.File && window.FileList && window.FileReader) {
+                  var filesInput = document.getElementById("images");
+                  filesInput.addEventListener("change", function(event) {
+                      var files = event.target.files; //FileList object
+                      var imageSelectShow = document.getElementById("imageSelectShow");
+                      imageSelectShow.innerHTML = "";
+                      for (var i = 0; i < files.length; i++) {
+                          var file = files[i];
+                          //Only pics
+                          if (!file.type.match('image'))
+                              continue;
+                          var picReader = new FileReader();
+
+                          picReader.addEventListener("load", function(event) {
+                              var picFile = event.target;
+                              imageSelectShow.innerHTML += "<a href='#' class='pop'><img data-toggle='modal' data-target='#imageModal' src='" + picFile.result + "'" + "title='" + picFile.name + "' alt='" + picFile.name + "'/></a>";
+                              console.log(picFile);
+                          });
+                          //Read the image
+                          picReader.readAsDataURL(file);
+                      }
+                  });
+              } else {
+                  console.log("Your browser does not support File API");
+              }
+          }
+      {% endif %}
+    </script>
+  </body>
+</html>

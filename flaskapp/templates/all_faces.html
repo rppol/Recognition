@@ -1,0 +1,63 @@
+{% extends "layout.html" %} {% block head %}
+<!-- Our Custom CSS -->
+<!-- <link
+  rel="stylesheet"
+  href="{{ url_for('static', filename='css/home.css') }}"
+/> -->
+<link
+  rel="stylesheet"
+  href="{{ url_for('static', filename='css/style.css') }}"
+/>
+<link
+  rel="stylesheet"
+  href="{{ url_for('static', filename='css/main.css') }}"
+/>
+{% endblock %} {% block content %}
+
+<form
+  method="POST"
+  action=""
+  id="registerationForm"
+  class="p-2 pt-md-0 mt-1 pt-sm-3 mt-md-2 mt-lg-0"
+  enctype="multipart/form-data"
+>
+  <div class="container col-md-12 col-lg-11">
+    <div class="row">
+      <h3 class="p-1">All Faces</h3>
+    </div>
+
+    <div class="line"></div>
+
+    <div class="row">
+      {% for person in persons: %}
+      <a class="col mb-2" href="{{ url_for('face', person_id=person.id) }}">
+        <div>
+          <div
+            id="photoFaceFrame"
+            class="shadow-lg p-2 pt-3 pb-3 bg-white rounded text-center"
+          >
+            <div>
+              {% if person.images|length > 0: %}
+              <img
+                class="img-rounded listFaces"
+                src="{{ url_for('static', filename='images/dataset/' + person.id|string + '/' + person.images[0].image_file) }}"
+                alt="{{ person.name[16:] }}"
+              />
+              {% else: %}
+              <img
+                class="img-rounded listFaces"
+                src="{{ url_for('static', filename='images/default_person_image.png') }}"
+                alt="{{ person.name[16:] }}"
+              />
+              {% endif %}
+            </div>
+            <h6 class="mt-2 mb-0 p-0">{{ person.name }}</h6>
+          </div>
+        </div>
+      </a>
+      {% endfor %}
+    </div>
+  </div>
+</form>
+
+{% endblock %}
