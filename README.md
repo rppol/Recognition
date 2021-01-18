@@ -10,4 +10,4 @@ run file run.py
 model directory managed by model.py
 
 
-Rest of the sections are self explanatory.
+Rest of the sections are self explanatory and testable through GUI.
