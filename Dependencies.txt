@@ -1,0 +1,11 @@
+pip3 install flask
+pip3 install flask-wtf
+pip3 install flask-sqlalchemy
+pip3 install Pillow
+pip3 install opencv-python
+pip3 install flask-bcrypt
+pip3 install flask-login
+pip3 install face_recognition
+pip3 install tensorflow
+pip3 install numpy
+pip3 install imutils
