@@ -4,7 +4,7 @@ The static folder in flaskapp includes:<br> a) Face Detection model<br>  b) Face
 All the models to be updated with further developments/improvements.
 
 # For testing 
-run file run.py
+run file run.py <br>
 An intuitive GUI launches in the browser
 
 Model directory managed by model.py
